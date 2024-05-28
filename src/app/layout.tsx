@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${inter.className} pt-16 md:pt-20`}>
+      <body className={`${inter.className}`}>
         <AuthProvider>
           <Toaster />
           <Nav />
