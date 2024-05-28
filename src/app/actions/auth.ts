@@ -34,7 +34,7 @@ export async function signin(username: string, password: string) {
 
 export async function signup(username: string, password: string) {
   try {
-    const response = await axios.post('http://localhost:3000/auth/signup', {
+    const response = await axios.post(`${API_URL}/auth/signup`, {
       username,
       password,
     });
