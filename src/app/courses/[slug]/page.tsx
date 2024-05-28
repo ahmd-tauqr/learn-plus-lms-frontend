@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import axios from 'axios';
 import slugify from 'slugify';
@@ -19,7 +18,6 @@ export default function CourseDetailsPage({
   const { enrollToCourse, getEnrollments, isAuthenticated } = useAuth();
   const [course, setCourse] = useState<Course | null>(null);
   const [isEnrolled, setIsEnrolled] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     fetchCourseDetails();
