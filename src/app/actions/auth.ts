@@ -1,10 +1,12 @@
 import axios from 'axios';
 import { cookies } from 'next/headers';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export async function signin(username: string, password: string) {
   try {
     const response = await axios.post(
-      'http://localhost:3000/auth/signin',
+      `${API_URL}/auth/signin`,
       {
         username,
         password,

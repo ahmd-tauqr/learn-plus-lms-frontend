@@ -9,6 +9,8 @@ import { notifyError, notifySuccess } from '@/components/Toaster';
 import { Course } from '@/types/entities';
 import Link from 'next/link';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default function CourseDetailsPage({
   params,
 }: {
@@ -33,7 +35,7 @@ export default function CourseDetailsPage({
 
   const fetchCourseDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/courses`);
+      const response = await axios.get(`${API_URL}/courses`);
       const courseData = response.data.find(
         (c: any) => slugify(c.title, { lower: true }) === params.slug
       );

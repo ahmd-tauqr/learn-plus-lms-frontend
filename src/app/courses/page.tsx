@@ -8,6 +8,8 @@ import slugify from 'slugify';
 import { Course } from '@/types/entities';
 import { notifyError, notifySuccess } from '@/components/Toaster';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 const CoursesPage = () => {
   const { enrollToCourse, getEnrollments, isAuthenticated } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
@@ -26,7 +28,7 @@ const CoursesPage = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/courses');
+      const response = await axios.get(`${API_URL}/courses`);
       setCourses(response.data);
     } catch (error) {
       console.error('Error fetching courses:', error);

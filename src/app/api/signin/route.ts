@@ -1,12 +1,14 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export async function POST(req: Request) {
   const { username, password } = await req.json();
 
   try {
     const response = await axios.post(
-      'http://localhost:3000/auth/signin',
+      `${API_URL}/auth/signin`,
       {
         username,
         password,
