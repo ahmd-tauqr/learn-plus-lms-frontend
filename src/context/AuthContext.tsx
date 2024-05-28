@@ -10,6 +10,7 @@ import {
 import { getCookie, setCookie, deleteCookie } from 'cookies-next';
 import axios from 'axios';
 import { Enrollment, LessonStatus } from '@/types/entities';
+import { useRouter } from 'next/navigation';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -32,6 +33,7 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const token = getCookie('accessToken') as string | undefined;
@@ -40,6 +42,40 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
     setIsLoading(false);
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refreshAccessToken();
+    }, 55 * 60 * 1000); // Refresh token every 55 minutes
+    return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const refreshAccessToken = async () => {
+    try {
+      const refreshToken = getCookie('refreshToken') as string | undefined;
+      if (!refreshToken) {
+        logout();
+        return;
+      }
+
+      const response = await axios.post(
+        `${API_URL}/auth/refresh-token`,
+        { refreshToken },
+        { withCredentials: true }
+      );
+
+      if (response.status === 200) {
+        setCookie('accessToken', response.data.accessToken);
+        setIsAuthenticated(true);
+      } else {
+        logout();
+      }
+    } catch (error) {
+      console.error('Error refreshing access token:', error);
+      logout();
+    }
+  };
 
   const login = () => {
     const token = getCookie('accessToken') as string | undefined;
@@ -51,6 +87,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     deleteCookie('accessToken');
     setIsAuthenticated(false);
+    router.push('/');
   };
 
   const getEnrollments = async (): Promise<Enrollment[]> => {
